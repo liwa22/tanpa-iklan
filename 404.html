@@ -1,93 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="robots" content="noindex">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Redirecting...</title>
-  <style>
-    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; display:flex; align-items:center; justify-content:center; height:100vh; margin:0; background:#fff; color:#111 }
-    .msg { text-align:center; max-width:520px; padding:20px }
-  </style>
-</head>
-<body>
-  <div class="msg">
-    <p>Memuat aplikasi…</p>
-    <p style="font-size:0.9rem; color:#666">Jika tidak otomatis, klik <a id="goRoot" href="/">di sini</a>.</p>
-  </div>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Redirect</title>
+    <script type="text/javascript">
+      var pathSegmentsToKeep = 0;
 
-  <script>
-    (function () {
-      // Fetch root (index.html) and inject it into this document.
-      // This keeps the current URL unchanged so client-side routing code can read pathname (/e/xxx).
-      const ROOT = '/'; // ubah jika index berada di subpath
-      fetch(ROOT, {cache: "no-store"})
-        .then(resp => {
-          if (!resp.ok) throw new Error('index fetch failed: ' + resp.status);
-          return resp.text();
-        })
-        .then(html => {
-          // Parse fetched HTML and replace head+body of current document
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(html, 'text/html');
-
-          // Replace <head> (keep this page's <title> minimal until replaced)
-          try {
-            // Remove current head children, then clone from fetched doc
-            document.head.innerHTML = '';
-            for (const node of doc.head.childNodes) {
-              document.head.appendChild(document.importNode(node, true));
-            }
-          } catch (e) {
-            console.warn('Could not replace head fully:', e);
-          }
-
-          // Replace body content
-          const fetchedBody = doc.body;
-          document.body.innerHTML = '';
-          for (const node of fetchedBody.childNodes) {
-            document.body.appendChild(document.importNode(node, true));
-          }
-
-          // Re-run inline and external scripts from fetched index:
-          // Find scripts in fetched doc and re-append them so they execute.
-          // Note: external scripts will be loaded/executed again.
-          const scripts = doc.querySelectorAll('script');
-          for (const oldScript of scripts) {
-            const s = document.createElement('script');
-
-            // Copy attributes
-            for (const attr of oldScript.attributes) {
-              s.setAttribute(attr.name, attr.value);
-            }
-
-            if (oldScript.src) {
-              // External script: set crossorigin if present
-              // append to body to execute
-              s.src = oldScript.src;
-              s.async = false; // preserve order
-              document.body.appendChild(s);
-            } else {
-              // Inline script: copy content
-              s.textContent = oldScript.textContent;
-              document.body.appendChild(s);
-            }
-          }
-          // Done: the fetched index scripts should run and pick up window.location.pathname as-is.
-        })
-        .catch(err => {
-          console.error(err);
-          // fallback: redirect to root (so index can handle via hash or query if needed)
-          // but avoid infinite redirect loops: only redirect if current pathname !== '/'
-          if (window.location.pathname !== '/') {
-            const fallback = '/' + window.location.pathname.replace(/^\//, '');
-            // best-effort: navigate to root with original path in hash
-            window.location.replace('/#' + window.location.pathname + window.location.search + window.location.hash);
-          } else {
-            document.querySelector('.msg').innerHTML = '<p>Gagal memuat aplikasi. Silakan <a href="/">kembali ke beranda</a>.</p>';
-          }
-        });
-    })();
-  </script>
-</body>
+      var l = window.location;
+      l.replace(
+        l.protocol +
+          "//" +
+          l.hostname +
+          (l.port ? ":" + l.port : "") +
+          l.pathname
+            .split("/")
+            .slice(0, 1 + pathSegmentsToKeep)
+            .join("/") +
+          "/?/" +
+          l.pathname.slice(1).split("/").slice(pathSegmentsToKeep).join("/").replace(/&/g, "~and~") +
+          (l.search ? "&" + l.search.slice(1).replace(/&/g, "~and~") : "") +
+          l.hash
+      );
+    </script>
+  </head>
+  <body></body>
 </html>
