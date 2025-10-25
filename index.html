@@ -14,30 +14,40 @@
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
   <style>
-    body {
-      background: #f8fafc;
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background: #ffffff;
       font-family: 'Poppins', sans-serif;
     }
-    .upload-button {
-      background-color: #f1f5f9;
-      border-radius: 9999px;
-      padding: 7px 14px;
-      display: inline-flex;
-      align-items: center;
-      font-weight: 500;
-      transition: all 0.2s ease-in-out;
+
+    main {
+      flex: 1 0 auto;
     }
-    .upload-button:hover {
-      background-color: #e2e8f0;
-      transform: translateY(-1px);
+
+    footer {
+      flex-shrink: 0;
     }
+
+    #video-player {
+      width: 100%;
+      height: 65vh;
+      background: #000;
+      object-fit: contain;
+      display: block;
+    }
+
     .loading-spinner {
-      border: 4px solid rgba(0, 0, 0, 0.2);
-      border-top: 4px solid #3b82f6;
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      border-top: 4px solid #000;
       border-radius: 50%;
-      width: 45px;
-      height: 45px;
-      animation: spin 0.9s linear infinite;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
       position: absolute;
       top: 50%;
       left: 50%;
@@ -45,148 +55,144 @@
       z-index: 10;
       display: none;
     }
+
     @keyframes spin {
       0% { transform: translate(-50%, -50%) rotate(0deg); }
       100% { transform: translate(-50%, -50%) rotate(360deg); }
     }
+
+    .upload-button {
+      background-color: #e5e7eb;
+      border-radius: 30px;
+      padding: 7px 12px;
+      display: inline-flex;
+      align-items: center;
+      font-weight: 500;
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    .upload-button:hover {
+      background-color: #d1d5db;
+      color: #374151;
+    }
   </style>
 </head>
-<body class="text-gray-900 flex flex-col min-h-screen">
+<body class="bg-white text-black font-sans">
 
-  <!-- Header -->
-  <header class="bg-white shadow-sm sticky top-0 z-20">
-    <div class="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
-      <h1 class="text-xl md:text-2xl font-bold text-gray-800">TANPA IKLAN</h1>
-      <a href="https://videi.my.id/" class="upload-button">
-        <i class="fas fa-upload mr-2 text-gray-600"></i> Upload
-      </a>
+  <header class="bg-white pt-3 pb-1 px-6 shadow-sm">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+      <h1 class="text-2xl font-bold text-black">TANPA IKLAN</h1>
+      <nav>
+        <a href="https://videi.my.id/" class="mx-2 text-black upload-button">
+          <i class="fas fa-upload mr-1"></i> Upload
+        </a>
+      </nav>
     </div>
   </header>
 
-  <!-- Main Content -->
-  <main class="flex-grow flex flex-col items-center justify-start py-8 px-4">
-    
-    <!-- Video Section -->
-    <div class="relative w-full max-w-5xl rounded-2xl overflow-hidden shadow-lg bg-black">
-      <div id="loading-spinner" class="loading-spinner"></div>
-      <video
-        id="video-player"
-        controls
-        preload="metadata"
-        controlsList="nodownload noremoteplayback"
-        disablePictureInPicture
-        class="w-full h-auto rounded-2xl object-contain"
-      >
-        Your browser does not support the video tag.
-      </video>
-    </div>
+  <main class="pt-4 pb-10 relative">
+    <div class="loading-spinner" id="loading-spinner"></div>
+    <video
+      id="video-player"
+      controls
+      preload="metadata"
+      controlsList="nodownload noremoteplayback"
+      disablePictureInPicture
+    >
+      Your browser does not support the video tag.
+    </video>
 
-    <div id="error-message" class="text-red-600 mt-4 text-center hidden"></div>
+    <div id="error-message" class="max-w-7xl mx-auto px-6 text-red-600 mt-4"></div>
 
-    <!-- Video Info -->
-    <section class="w-full max-w-5xl mt-8 bg-white shadow-sm rounded-xl p-6">
-      <h2 id="video-title" class="text-2xl md:text-3xl font-semibold mb-3 text-gray-900">Judul Video</h2>
-      <p id="video-description" class="text-gray-600 mb-6 leading-relaxed">
-        Deskripsi video akan muncul di sini.
-      </p>
+    <section class="max-w-7xl mx-auto mt-8 px-6">
+      <h2 id="video-title" class="text-3xl font-bold mb-4 text-black">Judul Video</h2>
+      <p id="video-description" class="text-gray-700 mb-6">Deskripsi video akan muncul di sini.</p>
 
-      <div class="flex flex-wrap items-center gap-4">
-        <div class="flex items-center text-yellow-400 text-lg">
+      <div class="flex items-center mb-6">
+        <div class="flex text-yellow-400 mr-4">
           <i class="fas fa-star"></i>
           <i class="fas fa-star"></i>
           <i class="fas fa-star"></i>
           <i class="fas fa-star"></i>
           <i class="fas fa-star-half-alt"></i>
-          <span class="ml-2 text-gray-800 text-base">5.5</span>
+          <span class="ml-2 text-black">5.5</span>
         </div>
-
-        <div class="flex items-center text-gray-600 text-base">
-          <i class="fas fa-eye mr-2"></i> 1,2M Views
-        </div>
-
-        <button
-          id="share-button"
-          class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center text-sm font-medium transition-all duration-200"
-        >
-          <i class="fas fa-share-alt mr-2"></i> Share
+        <span class="text-gray-600 mr-4"><i class="fas fa-eye mr-1"></i> 1,2M Views</span>
+        <button id="share-button" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mr-2">
+          <i class="fas fa-share-alt mr-1"></i> Share
         </button>
       </div>
     </section>
   </main>
 
-  <!-- Footer -->
-  <footer class="bg-white border-t py-4 text-center text-gray-500 text-sm">
-    &copy; 2026 KOK MASIH ADA IKLAN SIH KYK WEB SEBELAH HAHAHA
+  <footer class="bg-white py-4 px-6 text-center text-black border-t">
+    &copy; 2026 Videy Streaming
   </footer>
 
-  <!-- FUNGSI TIDAK DIUBAH -->
   <script>
-    document.addEventListener('DOMContentLoaded', async () => {
-      let params = new URLSearchParams(window.location.search);
-let videoId = params.get("id");
+    document.addEventListener("DOMContentLoaded", async () => {
+      const params = new URLSearchParams(window.location.search);
+      let videoId = params.get("id");
 
-// fallback kalau pakai format /e/abc123
-if (!videoId) {
-  let path = window.location.pathname;
-  if (path.startsWith("/e/")) {
-    videoId = path.substring(3);
-  }
-}
+      // fallback untuk format /e/abc123
+      if (!videoId) {
+        const path = window.location.pathname;
+        if (path.startsWith("/e/")) {
+          videoId = path.substring(3);
+        }
+      }
 
-      const videoPlayer = document.getElementById('video-player');
-      const videoTitle = document.getElementById('video-title');
-      const videoDescription = document.getElementById('video-description');
-      const loadingSpinner = document.getElementById('loading-spinner');
-      const errorMessage = document.getElementById('error-message');
-      const shareButton = document.getElementById('share-button');
+      const videoPlayer = document.getElementById("video-player");
+      const videoTitle = document.getElementById("video-title");
+      const videoDescription = document.getElementById("video-description");
+      const loadingSpinner = document.getElementById("loading-spinner");
+      const errorMessage = document.getElementById("error-message");
+      const shareButton = document.getElementById("share-button");
 
       if (!videoId) {
-        errorMessage.textContent = 'ID video tidak ditemukan di URL.';
-        errorMessage.classList.remove('hidden');
+        errorMessage.textContent = "ID video tidak ditemukan di URL.";
+        errorMessage.style.display = "block";
         return;
       }
 
-      loadingSpinner.style.display = 'block';
+      loadingSpinner.style.display = "block";
 
       try {
-        const response = await axios.get('https://raw.githubusercontent.com/liwa22/json/refs/heads/main/Video.json', { timeout: 10000 });
+        const response = await axios.get("https://raw.githubusercontent.com/liwa22/json/refs/heads/main/Video.json", { timeout: 10000 });
         const videos = response.data;
-        const foundVideo = videos.find(video => video.id === videoId);
+        const foundVideo = videos.find(v => v.id === videoId);
 
         if (foundVideo) {
           videoPlayer.src = foundVideo.Url;
-          videoTitle.textContent = foundVideo.Judul || 'Untitled Video';
-          videoDescription.textContent = foundVideo.Description || 'No description available.';
-          videoPlayer.addEventListener('error', () => {
-            errorMessage.textContent = 'Error memutar video. Periksa koneksi atau format video.';
-            errorMessage.classList.remove('hidden');
-          });
+          videoTitle.textContent = foundVideo.Judul || "Untitled Video";
+          videoDescription.textContent = foundVideo.Description || "No description available.";
         } else {
-          errorMessage.textContent = `Video dengan ID ${videoId} tidak ditemukan.`;
-          errorMessage.classList.remove('hidden');
+          errorMessage.textContent = `Video dengan ID "${videoId}" tidak ditemukan.`;
+          errorMessage.style.display = "block";
         }
       } catch (error) {
-        errorMessage.textContent = 'Error mengambil data video. Periksa URL JSON atau koneksi internet.';
-        errorMessage.classList.remove('hidden');
+        errorMessage.textContent = "Gagal memuat data video. Periksa koneksi atau file JSON.";
+        errorMessage.style.display = "block";
       } finally {
-        loadingSpinner.style.display = 'none';
+        loadingSpinner.style.display = "none";
       }
 
-      shareButton.addEventListener('click', async () => {
+      // Tombol share
+      shareButton.addEventListener("click", async () => {
         const currentUrl = window.location.href;
         try {
           await navigator.clipboard.writeText(currentUrl);
-          const originalText = shareButton.innerHTML;
-          shareButton.innerHTML = '<i class="fas fa-check mr-2"></i> Copied!';
-          setTimeout(() => { shareButton.innerHTML = originalText; }, 2000);
+          const original = shareButton.innerHTML;
+          shareButton.innerHTML = '<i class="fas fa-check mr-1"></i> Copied!';
+          setTimeout(() => (shareButton.innerHTML = original), 2000);
         } catch {
-          alert('Gagal menyalin link. Salin manual: ' + currentUrl);
+          alert("Gagal menyalin link. Salin manual: " + currentUrl);
         }
       });
     });
 
-    const videoPlayer = document.getElementById('video-player');
-    videoPlayer.addEventListener('contextmenu', e => e.preventDefault());
+    // Disable klik kanan pada video
+    document.getElementById("video-player").addEventListener("contextmenu", e => e.preventDefault());
   </script>
 </body>
 </html>
