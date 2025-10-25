@@ -147,6 +147,11 @@
       background: #1d4ed8;
       transform: translateY(-2px);
     }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
     @media (max-width: 576px) {
       header {
         padding: 1rem;
@@ -175,7 +180,7 @@
 <body>
   <header>
     <div class="container">
-      <h1>Videy Tanpa Iklan</h1>
+      <h1>Videy</h1>
       <nav>
         <a href="https://videi.my.id/" class="upload-button">
           <i class="fas fa-upload mr-1"></i> Upload
@@ -196,7 +201,7 @@
         Your browser does not support the video tag.
       </video>
     </div>
-    <div id="error-message"></div>
+    <div id="error-message" class="container"></div>
 
     <section class="container">
       <h2 id="video-title">Judul Video</h2>
@@ -215,6 +220,25 @@
   <footer>
     &copy; <span id="year"></span> Videy Streaming
   </footer>
+
+  <script type="text/javascript">
+    (function (l) {
+      if (l.hash && l.hash.startsWith('#/')) {
+        const newPath = l.hash.replace('#', '');
+        window.location.replace(newPath);
+      }
+      if (l.search[1] === "/") {
+        var decoded = l.search
+          .slice(1)
+          .split("&")
+          .map(function (s) {
+            return s.replace(/~and~/g, "&");
+          })
+          .join("?");
+        window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+      }
+    })(window.location);
+  </script>
 
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
