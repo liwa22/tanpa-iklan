@@ -23,7 +23,7 @@
     }
     main {
       flex: 1 0 auto;
-      padding: 2rem 1rem;
+      padding: 2rem 0; /* Kurangi padding horizontal untuk full-width */
     }
     footer {
       flex-shrink: 0;
@@ -67,8 +67,8 @@
     }
     #video-container {
       width: 100%;
-      max-width: 900px;
-      margin: 0 auto;
+      max-width: 100%; /* Full lebar layar */
+      margin: 0; /* Menempel ke pinggir */
       position: relative;
       border-radius: 10px;
       overflow: hidden;
@@ -78,6 +78,7 @@
     #video-player {
       width: 100%;
       height: auto;
+      max-height: 80vh; /* Maksimal 80% tinggi layar */
       display: block;
       object-fit: contain;
     }
@@ -165,6 +166,9 @@
       }
       #video-container {
         max-width: 100%;
+      }
+      #video-player {
+        max-height: 60vh; /* Lebih kecil di mobile untuk proporsi */
       }
       #video-title {
         font-size: 1.5rem;
