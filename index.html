@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="monetag" content="82d151422eebfd582a09baed1158ba5f">
-  <title>Videy - Streaming</title>
+  <title>TANPA IKLAN</title>
   <!-- Google Fonts: Poppins -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <!-- Font Awesome CDN -->
@@ -16,14 +16,15 @@
       margin: 0;
       padding: 0;
       font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #e3f2fd, #bbdefb); /* Warna seragam untuk body */
+      background: linear-gradient(135deg, #e3f2fd, #bbdefb);
       display: flex;
       flex-direction: column;
       min-height: 100vh;
     }
     main {
       flex: 1 0 auto;
-      padding: 2rem 0; /* Hapus padding horizontal untuk full-width */
+      padding: 1.5rem 1rem;
+      text-align: center;
     }
     footer {
       flex-shrink: 0;
@@ -31,11 +32,10 @@
       text-align: center;
       color: #64748b;
       font-size: 0.85rem;
-      background: linear-gradient(135deg, #e3f2fd, #bbdefb); /* Warna seragam dengan body */
     }
     header {
       background: white;
-      padding: 1rem 2rem;
+      padding: 0.5rem 1rem;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
     header .container {
@@ -46,7 +46,7 @@
       align-items: center;
     }
     header h1 {
-      font-size: 1.5rem;
+      font-size: 1.2rem;
       font-weight: 700;
       color: #1e3a8a;
     }
@@ -54,8 +54,8 @@
       background: #3b82f6;
       color: white;
       border-radius: 25px;
-      padding: 0.5rem 1rem;
-      font-size: 0.9rem;
+      padding: 0.4rem 0.9rem;
+      font-size: 0.85rem;
       font-weight: 500;
       transition: background 0.3s, transform 0.2s;
       display: inline-flex;
@@ -66,22 +66,13 @@
       background: #1d4ed8;
       transform: translateY(-2px);
     }
-    #video-container {
-      width: 100%;
-      max-width: 100%; /* Full lebar layar */
-      margin: 0; /* Menempel ke pinggir */
-      position: relative;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-      background: #fff;
-    }
     #video-player {
-      width: 100%;
+      width: 95%;
+      max-width: 1100px;
       height: auto;
-      max-height: 90vh; /* Besar untuk portrait, memanjang ke bawah */
-      display: block;
-      object-fit: contain; /* Menjaga rasio: portrait ke bawah, landscape ke samping */
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      background: #000;
     }
     .loading-spinner {
       border: 4px solid rgba(0, 0, 0, 0.1);
@@ -90,16 +81,12 @@
       width: 36px;
       height: 36px;
       animation: spin 0.8s linear infinite;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 10;
+      margin: 1rem auto;
       display: none;
     }
     @keyframes spin {
-      0% { transform: translate(-50%, -50%) rotate(0deg); }
-      100% { transform: translate(-50%, -50%) rotate(360deg); }
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
     #error-message {
       display: none;
@@ -109,21 +96,23 @@
       font-size: 0.9rem;
     }
     #video-title {
-      font-size: 1.8rem;
+      font-size: 1.6rem;
       font-weight: 600;
       color: #1e3a8a;
-      margin-bottom: 0.5rem;
+      margin: 1rem 0 0.5rem;
     }
     #video-description {
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       color: #64748b;
       margin-bottom: 1rem;
     }
     .video-meta {
       display: flex;
+      justify-content: center;
       align-items: center;
       gap: 1rem;
       margin-bottom: 1rem;
+      flex-wrap: wrap;
     }
     .rating {
       display: flex;
@@ -149,35 +138,23 @@
       background: #1d4ed8;
       transform: translateY(-2px);
     }
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 0 1rem;
-    }
     @media (max-width: 576px) {
       header {
-        padding: 1rem;
+        padding: 0.6rem;
       }
       header h1 {
-        font-size: 1.2rem;
-      }
-      .upload-button {
-        font-size: 0.8rem;
-        padding: 0.4rem 0.8rem;
-      }
-      #video-container {
-        max-width: 100%;
+        font-size: 1rem;
       }
       #video-player {
-        max-height: 70vh; /* Lebih kecil di mobile untuk proporsi */
+        width: 100%;
+        max-width: 100%;
       }
       #video-title {
-        font-size: 1.5rem;
+        font-size: 1.4rem;
       }
       .video-meta {
         flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
+        align-items: center;
       }
     }
   </style>
@@ -185,7 +162,7 @@
 <body>
   <header>
     <div class="container">
-      <h1>Videy</h1>
+      <h1>Tanpa Iklan</h1>
       <nav>
         <a href="https://videi.my.id/" class="upload-button">
           <i class="fas fa-upload mr-1"></i> Upload
@@ -195,25 +172,26 @@
   </header>
 
   <main>
-    <div id="video-container">
-      <div class="loading-spinner" id="loading-spinner"></div>
-      <video 
-        id="video-player" 
-        controls 
-        preload="metadata"
-        controlsList="nodownload noremoteplayback" 
-        disablePictureInPicture>
-        Your browser does not support the video tag.
-      </video>
-    </div>
-    <div id="error-message" class="container"></div>
+    <div class="loading-spinner" id="loading-spinner"></div>
 
-    <section class="container">
+    <video 
+      id="video-player" 
+      controls 
+      preload="metadata"
+      controlsList="nodownload noremoteplayback" 
+      disablePictureInPicture>
+      Your browser does not support the video tag.
+    </video>
+
+    <div id="error-message"></div>
+
+    <section>
       <h2 id="video-title">Judul Video</h2>
       <p id="video-description">Deskripsi video akan muncul di sini.</p>
       <div class="video-meta">
         <div class="rating">
-          <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+          <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+          <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
           <span class="ml-1">5.5</span>
         </div>
         <span class="views"><i class="fas fa-eye mr-1"></i> 1,2M Views</span>
@@ -226,40 +204,12 @@
     &copy; <span id="year"></span> Videy Streaming
   </footer>
 
-  <script type="text/javascript">
-    (function (l) {
-      if (l.hash && l.hash.startsWith('#/')) {
-        const newPath = l.hash.replace('#', '');
-        window.location.replace(newPath);
-      }
-      if (l.search[1] === "/") {
-        var decoded = l.search
-          .slice(1)
-          .split("&")
-          .map(function (s) {
-            return s.replace(/~and~/g, "&");
-          })
-          .join("?");
-        window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
-      }
-    })(window.location);
-  </script>
-
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
 
     document.addEventListener('DOMContentLoaded', async () => {
-      let urlPath = window.location.pathname;
-      let videoId = '';
-
-      if (urlPath.startsWith('/')) {
-        urlPath = urlPath.substring(1);
-      }
-      if (urlPath.startsWith('e/')) {
-        videoId = urlPath.substring(2);
-      } else {
-        videoId = urlPath;
-      }
+      let urlPath = window.location.pathname.replace(/^\/(e\/)?/, '');
+      const videoId = urlPath || '';
 
       const videoPlayer = document.getElementById('video-player');
       const videoTitle = document.getElementById('video-title');
@@ -285,13 +235,6 @@
           videoPlayer.src = foundVideo.Url;
           videoTitle.textContent = foundVideo.Judul || 'Untitled Video';
           videoDescription.textContent = foundVideo.Description || 'No description available.';
-
-          videoPlayer.addEventListener('error', () => {
-            errorMessage.textContent = 'Error memutar video. Periksa koneksi atau format video.';
-            errorMessage.style.display = 'block';
-          });
-
-          console.log(`Memuat video: ${foundVideo.Judul} - ${foundVideo.Url}`);
         } else {
           errorMessage.textContent = `Video dengan ID ${videoId} tidak ditemukan.`;
           errorMessage.style.display = 'block';
