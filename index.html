@@ -4,10 +4,30 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="monetag" content="82d151422eebfd582a09baed1158ba5f">
-  <title>Videy - Streaming</title>
-  <!-- Google Fonts: Poppins -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <!-- Font Awesome CDN -->
+
+  <!-- popunder -->
+
+  <title>TANPA IKLAN</title>
+  <script type="text/javascript">
+      (function (l) {
+        if (l.hash && l.hash.startsWith('#/')) {
+          const newPath = l.hash.replace('#', '');
+          window.location.replace(newPath);
+        }
+        if (l.search[1] === "/") {
+          var decoded = l.search
+            .slice(1)
+            .split("&")
+            .map(function (s) {
+              return s.replace(/~and~/g, "&");
+            })
+            .join("?");
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+  </script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <style>
@@ -15,179 +35,85 @@
       height: 100%;
       margin: 0;
       padding: 0;
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #e3f2fd, #bbdefb); /* Gradient biru pastel */
       display: flex;
       flex-direction: column;
       min-height: 100vh;
     }
     main {
       flex: 1 0 auto;
-      padding: 2rem 0; /* Hapus padding horizontal untuk full-width */
     }
     footer {
       flex-shrink: 0;
-      padding: 1rem;
-      text-align: center;
-      color: #64748b;
-      font-size: 0.85rem;
-      background: linear-gradient(135deg, #e3f2fd, #bbdefb); /* Seragam dengan body */
     }
-    header {
-      background: white;
-      padding: 1rem 2rem;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-    header .container {
-      max-width: 900px;
+    #video-container {
+      width: 100%;
+      max-width: 1200px;
       margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    header h1 {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: #1e3a8a;
-    }
-    .upload-button {
-      background: #3b82f6;
-      color: white;
-      border-radius: 25px;
-      padding: 0.5rem 1rem;
-      font-size: 0.9rem;
-      font-weight: 500;
-      transition: background 0.3s, transform 0.2s;
-      display: inline-flex;
-      align-items: center;
-      text-decoration: none;
-    }
-    .upload-button:hover {
-      background: #1d4ed8;
-      transform: translateY(-2px);
+      position: relative;
+      border-radius: 0px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      background-color: #f0f0f0;
     }
     #video-player {
       width: 100%;
-      max-width: 100%; /* Full lebar layar */
       height: auto;
-      max-height: 90vh; /* Besar untuk portrait, memanjang ke bawah */
       display: block;
-      object-fit: contain; /* Portrait ke bawah, landscape ke samping */
-      border-radius: 10px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-      background: #fff;
-      position: relative; /* Untuk posisi spinner */
+      object-fit: contain;
     }
     .loading-spinner {
-      border: 4px solid rgba(0, 0, 0, 0.1);
-      border-top: 4px solid #3b82f6;
+      border: 4px solid rgba(0, 0, 0, 0.3);
+      border-top: 4px solid #000000;
       border-radius: 50%;
-      width: 36px;
-      height: 36px;
-      animation: spin 0.8s linear infinite;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      z-index: 10;
+      z-index: 20;
       display: none;
     }
     @keyframes spin {
-      0% { transform: translate(-50%, -50%) rotate(0deg); }
-      100% { transform: translate(-50%, -50%) rotate(360deg); }
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
     #error-message {
       display: none;
-      color: #dc2626;
+      color: red;
       text-align: center;
-      margin-top: 1rem;
-      font-size: 0.9rem;
+      margin-top: 20px;
     }
-    #video-title {
-      font-size: 1.8rem;
-      font-weight: 600;
-      color: #1e3a8a;
-      margin-bottom: 0.5rem;
-    }
-    #video-description {
-      font-size: 0.9rem;
-      color: #64748b;
-      margin-bottom: 1rem;
-    }
-    .video-meta {
-      display: flex;
+    .upload-button {
+      background-color: #e5e7eb; /* bg-gray-200 */
+      border-radius: 30px; /* Setengah bulat */
+      padding: 7px 10px; /* Padding untuk membuat kotak */
+      display: inline-flex;
       align-items: center;
-      gap: 1rem;
-      margin-bottom: 1rem;
+      font-weight: 500; /* Membuat tulisan Upload sedikit lebih tebal */
+      transition: background-color 0.2s, color 0.2s; /* Efek transisi untuk hover */
     }
-    .rating {
-      display: flex;
-      align-items: center;
-      color: #f59e0b;
-      font-size: 0.9rem;
-    }
-    .views {
-      color: #64748b;
-      font-size: 0.9rem;
-    }
-    .share-button {
-      background: #3b82f6;
-      color: white;
-      border-radius: 8px;
-      padding: 0.5rem 1rem;
-      font-size: 0.9rem;
-      font-weight: 500;
-      border: none;
-      transition: background 0.3s, transform 0.2s;
-    }
-    .share-button:hover {
-      background: #1d4ed8;
-      transform: translateY(-2px);
-    }
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 0 1rem;
-    }
-    @media (max-width: 576px) {
-      header {
-        padding: 1rem;
-      }
-      header h1 {
-        font-size: 1.2rem;
-      }
-      .upload-button {
-        font-size: 0.8rem;
-        padding: 0.4rem 0.8rem;
-      }
-      #video-player {
-        max-height: 70vh; /* Lebih kecil di mobile */
-      }
-      #video-title {
-        font-size: 1.5rem;
-      }
-      .video-meta {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
-      }
+    .upload-button:hover {
+      background-color: #d1d5db; /* bg-gray-300 untuk hover */
+      color: #4b5563; /* text-gray-600 untuk hover */
     }
   </style>
 </head>
-<body>
-  <header>
-    <div class="container">
-      <h1>Videy</h1>
+<body class="bg-white text-black font-sans">
+  <header class="bg-white pt-2 pb-0 px-6">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+      <h1 class="text-2xl font-bold text-black">TANPA IKLAN</h1>
       <nav>
-        <a href="https://videi.my.id/" class="upload-button">
+        <a href="https://videi.my.id/" class="mx-2 text-black upload-button">
           <i class="fas fa-upload mr-1"></i> Upload
         </a>
       </nav>
     </div>
   </header>
 
-  <main>
-    <div style="position: relative;">
+  <main class="pt-4 pb-10">
+    <div id="video-container" class="mt-4">
       <div class="loading-spinner" id="loading-spinner"></div>
       <video 
         id="video-player" 
@@ -198,44 +124,26 @@
         Your browser does not support the video tag.
       </video>
     </div>
-    <div id="error-message" class="container"></div>
+    <div id="error-message" class="max-w-7xl mx-auto px-6"></div>
 
-    <section class="container">
-      <h2 id="video-title">Judul Video</h2>
-      <p id="video-description">Deskripsi video akan muncul di sini.</p>
-      <div class="video-meta">
-        <div class="rating">
+    <section class="max-w-7xl mx-auto mt-8 px-6">
+      <h2 id="video-title" class="text-3xl font-bold mb-4 text-black">Judul Video</h2>
+      <p id="video-description" class="text-gray-700 mb-6">Deskripsi video akan muncul di sini.</p>
+
+      <div class="flex items-center mb-6">
+        <div class="flex text-yellow-400 mr-4">
           <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
-          <span class="ml-1">5.5</span>
+          <span class="ml-2 text-black">5.5</span>
         </div>
-        <span class="views"><i class="fas fa-eye mr-1"></i> 1,2M Views</span>
-        <button id="share-button" class="share-button"><i class="fas fa-share-alt mr-1"></i> Share</button>
+        <span class="text-gray-600 mr-4"><i class="fas fa-eye mr-1"></i> 1,2M Views</span>
+        <button id="share-button" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mr-2"><i class="fas fa-share-alt mr-1"></i> Share</button>
       </div>
     </section>
   </main>
 
-  <footer>
-    &copy; <span id="year"></span> Videy Streaming
+  <footer class="bg-white py-4 px-6 text-center text-black">
+    &copy; 2026 KOK MASIH ADA IKLAN SIH KYK WEB SEBELAH HAHAHA
   </footer>
-
-  <script type="text/javascript">
-    (function (l) {
-      if (l.hash && l.hash.startsWith('#/')) {
-        const newPath = l.hash.replace('#', '');
-        window.location.replace(newPath);
-      }
-      if (l.search[1] === "/") {
-        var decoded = l.search
-          .slice(1)
-          .split("&")
-          .map(function (s) {
-            return s.replace(/~and~/g, "&");
-          })
-          .join("?");
-        window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
-      }
-    })(window.location);
-  </script>
 
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
@@ -305,7 +213,10 @@
         }
       });
     });
+  </script>
 
+  <script>
+    // Disable klik kanan pada video
     const videoPlayer = document.getElementById('video-player');
     videoPlayer.addEventListener('contextmenu', e => e.preventDefault());
   </script>
