@@ -123,12 +123,19 @@
 <script>
   document.addEventListener('DOMContentLoaded', async () => {
     let params = new URLSearchParams(window.location.search);
-    let videoId = params.get("id");
-    if (!videoId) {
-      let path = window.location.pathname;
-      if (path.startsWith("/e/")) videoId = path.substring(3);
-    }
+let videoId = params.get("id");
 
+// Cek juga hash-based route (#/e/abc123)
+let path = window.location.pathname;
+let hashPath = window.location.hash.replace(/^#/, "");
+
+if (!videoId) {
+  if (path.startsWith("/e/")) {
+    videoId = path.substring(3);
+  } else if (hashPath.startsWith("/e/")) {
+    videoId = hashPath.substring(3);
+  }
+}
     const videoPlayer = document.getElementById('video-player');
     const videoTitle = document.getElementById('video-title');
     const videoDescription = document.getElementById('video-description');
